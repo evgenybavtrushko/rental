@@ -1,0 +1,104 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+          version="2.0">
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <fmt:setLocale value="${sessionScope.locale}"/>
+                <fmt:setBundle basename="title" var="i18n"/>
+                <c:if test="${not empty user}">
+                    <li><span class="text">Hi, ${user.name}!</span></li>
+                </c:if>
+                <c:if test="${empty user and not (pageName eq 'Login')}">
+                    <li><a href="${pageContext.request.contextPath}/frontController?command=login"><span
+                            class="glyphicon glyphicon-log-in"></span> <fmt:message bundle="${i18n}" key="heder.login"/></a>
+                    </li>
+                </c:if>
+                <c:if test="${empty user}">
+                    <li><a href="${pageContext.request.contextPath}/frontController?command=register"><span
+                            class="glyphicon glyphicon-list-alt"></span><fmt:message bundle="${i18n}"
+                                                                                     key="register.title"/></a></li>
+                </c:if>
+                <c:if test="${not empty user}">
+                    <li><a href="${pageContext.request.contextPath}/frontController?command=logout"><span
+                            class="glyphicon glyphicon-door"></span><fmt:message bundle="${i18n}"
+                                                                                 key="heder.logout"/></a></li>
+                </c:if>
+            </ul>
+            <fmt:setLocale value="${sessionScope.locale}"/>
+            <fmt:setBundle basename="title" var="i18n"/>
+            <c:url var="path" value="/frontController?command=${sessionScope.pageName}"></c:url>
+            <li><a href="${path}&amp;locale=ru_RU"> <fmt:message key="header.locale.ru" bundle="${i18n}"/></a></li>
+            <li><a href="${path}&amp;locale=en_US"><fmt:message key="header.locale.en" bundle="${i18n}"/></a></li>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <c:set var="navName"><fmt:message bundle="${i18n}" key="car.title"/></c:set>
+                    <c:choose>
+                        <c:when test="${pageName eq 'Car'}">
+                            <li class="active"><a href="#">${navName}</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li>
+                                <a href="${pageContext.request.contextPath}/frontController?command=car">${navName}</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:if test="${not empty user}">
+                        <c:set var="navName"><fmt:message bundle="${i18n}" key="orders.title"/></c:set>
+                        <c:choose>
+                            <c:when test="${pageName eq 'allOrders'}">
+                                <li class="active"><a href="#">${navName}</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li>
+                                    <c:if test="${not empty user and user.type eq 'USER'}">
+                                        <a href="${pageContext.request.contextPath}/frontController?command=orders">${navName}</a>
+                                    </c:if>
+                                    <c:if test="${not empty user and user.type eq 'ADMIN'}">
+                                        <a href="${pageContext.request.contextPath}/frontController?command=allOrders">${navName}</a>
+                                    </c:if>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                    <c:if test="${not empty user and user.type eq 'ADMIN'}">
+                        <c:set var="navName"><fmt:message bundle="${i18n}" key="orders.new"/></c:set>
+                        <c:choose>
+                            <c:when test="${pageName eq 'newOrders'}">
+                                <li class="active"><a href="#">${navName}</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li>
+                                    <a href="${pageContext.request.contextPath}/frontController?command=newOrders">${navName}</a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+                        <c:set var="navName"><fmt:message bundle="${i18n}" key="admin.active.users"/></c:set>
+                        <c:choose>
+                            <c:when test="${pageName eq 'activeUsers'}">
+                                <li class="active"><a href="#">${navName}</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li>
+                                    <a href="${pageContext.request.contextPath}/frontController?command=activeUsers">${navName}</a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+</jsp:root>
